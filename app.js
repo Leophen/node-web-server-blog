@@ -4,7 +4,7 @@ const handleUserRouter = require('./src/router/user')
 
 // 用于处理 post data
 const getPostData = (req) => {
-  const promise = newPromise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
     if (req.method !== 'POST') {
       resolve({})
       return
