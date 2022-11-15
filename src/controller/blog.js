@@ -36,8 +36,19 @@ const newBlog = (blogData = {}) => {
   }
 }
 
+/**
+ * 更新博客
+ * @param {*} id 要更新的博客 id
+ * @param {*} blogData 更新的博客对象，包含 title、content 属性
+ */
+const updateBlog = (id, blogData = {}) => {
+  // 假设已经更新成功
+  return true
+}
+
 module.exports = {
   getList,
   getDetail,
-  newBlog
+  newBlog,
+  updateBlog
 }
