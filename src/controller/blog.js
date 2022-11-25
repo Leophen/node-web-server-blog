@@ -1,23 +1,17 @@
-const getList = (author, keyword) => {
-const getList = (author, tag) => {
+const { exec } = require('../db/mysql')
+
 const getList = (author, type) => {
-  // 暂时返回正确格式的假数据
-  return [
-    {
-      id: 1,
-      title: '标题 A',
-      content: '内容 A',
-      createTime: 1668496456053,
-      author: 'leophen'
-    },
-    {
-      id: 2,
-      title: '标题 B',
-      content: '内容 B',
-      createTime: 1668496503387,
-      author: 'dorki'
-    }
-  ]
+  let sql = `select * from blogs where 1=1 `
+  if (author) {
+    sql += `and author = '${author}'`
+  }
+  if (type) {
+    sql += `and type = '${type}'`
+  }
+  sql += `order by createtime desc`
+
+  // 返回 promise
+  return exec(sql)
 }
 
 const getDetail = (id) => {

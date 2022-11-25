@@ -9,9 +9,11 @@ const handleBlogRouter = (req, res) => {
   if (method === 'GET' && req.path === '/api/blog/list') {
     const author = req.query.author || ''
     const type = req.query.type || ''
-    const listData = getList(author, type)
+    const result = getList(author, type)
 
-    return new SuccessModel(listData)
+    return result.then(listData => {
+      return new SuccessModel(listData)
+    })
   }
 
   // 获取博客详情
