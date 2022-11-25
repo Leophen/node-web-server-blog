@@ -26,8 +26,13 @@ const handleBlogRouter = (req, res) => {
 
   // 新建一篇博客
   if (method === 'POST' && req.path === '/api/blog/new') {
-    const data = newBlog(req.body)
-    return new SuccessModel(data)
+    // 这里先用假数据标注新增博客的作者
+    req.body.author = 'root'
+
+    const result = newBlog(req.body)
+    return result.then(data => {
+      return new SuccessModel(data)
+    })
   }
 
   // 更新一篇博客

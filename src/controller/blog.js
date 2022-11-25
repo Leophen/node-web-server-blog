@@ -22,10 +22,19 @@ const getDetail = (id) => {
 }
 
 const newBlog = (blogData = {}) => {
-  // blogData 是个博客对象，包含 title、content 属性
-  return {
-    id: 3
-  }
+  const { title, content, author, tag } = blogData
+  const createTime = Date.now()
+
+  const sql = `
+    insert into blogs (title, content, createtime, author, tag)
+    values ('${title}', '${content}', ${createTime}, '${author}', '${tag}')
+  `
+
+  return exec(sql).then(insertData => {
+    return {
+      id: insertData.insertId
+    }
+  })
 }
 
 /**
