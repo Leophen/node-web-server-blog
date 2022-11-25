@@ -22,12 +22,12 @@ const getDetail = (id) => {
 }
 
 const newBlog = (blogData = {}) => {
-  const { title, content, author, tag } = blogData
+  const { title, content, author, type } = blogData
   const createTime = Date.now()
 
   const sql = `
-    insert into blogs (title, content, createtime, author, tag)
-    values ('${title}', '${content}', ${createTime}, '${author}', '${tag}')
+    insert into blogs (title, content, createtime, author, type)
+    values ('${title}', '${content}', ${createTime}, '${author}', '${type}')
   `
 
   return exec(sql).then(insertData => {
@@ -44,8 +44,18 @@ const newBlog = (blogData = {}) => {
  * @returns 是否更新成功
  */
 const updateBlog = (id, blogData = {}) => {
-  // 假设已经更新成功
-  return true
+  const { title, content, type } = blogData
+  const sql = `
+    update blogs set title = '${title}', content = '${content}', type = '${type}'
+    where id = ${id}
+  `
+
+  return exec(sql).then(updateData => {
+    if (updateData.affectedRows > 0) {
+      return true
+    }
+    return false
+  })
 }
 
 /**
