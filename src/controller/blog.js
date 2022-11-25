@@ -1,5 +1,6 @@
 const getList = (author, keyword) => {
 const getList = (author, tag) => {
+const getList = (author, type) => {
   // 暂时返回正确格式的假数据
   return [
     {
