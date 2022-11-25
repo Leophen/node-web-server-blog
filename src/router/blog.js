@@ -49,12 +49,17 @@ const handleBlogRouter = (req, res) => {
 
   // 删除一篇博客
   if (method === 'POST' && req.path === '/api/blog/del') {
-    const result = delBlog(id)
-    if (result) {
-      return new SuccessModel()
-    } else {
-      return new ErrorModel('删除博客失败')
-    }
+    // 这里先用假数据标注删除博客的人
+    const author = 'root'
+
+    const result = delBlog(id, author)
+    return result.then(val => {
+      if (val) {
+        return new SuccessModel()
+      } else {
+        return new ErrorModel('删除博客失败')
+      }
+    })
   }
 }
 

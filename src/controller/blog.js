@@ -61,11 +61,18 @@ const updateBlog = (id, blogData = {}) => {
 /**
  * 删除博客
  * @param {*} id 要删除的博客 id
+ * @param {*} author 删除人
  * @returns 是否删除成功
  */
-const delBlog = (id) => {
-  // 假设已经删除成功
-  return true
+const delBlog = (id, author) => {
+  const sql = `delete from blogs where id = '${id}' and author='${author}'`
+
+  return exec(sql).then(delData => {
+    if (delData.affectedRows > 0) {
+      return true
+    }
+    return false
+  })
 }
 
 module.exports = {
