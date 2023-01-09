@@ -19,8 +19,9 @@ const handleUserRouter = (req, res) => {
 
     return result.then(data => {
       if (data.username) {
-        // 操作 Cookie
-        res.setHeader('Set-Cookie', `username=${data.username}; path=/; HttpOnly; Expires=${getCookieExpires()}`)
+        // 设置 Session
+        req.session.username = data.username
+        console.log('req.session: ', req.session)
         return new SuccessModel()
       }
       return new ErrorModel('登录失败')
@@ -29,9 +30,9 @@ const handleUserRouter = (req, res) => {
 
   // 登陆验证的测试
   if (method === 'GET' && req.path === '/api/user/login-test') {
-    if (req.cookie.username) {
+    if (req.session.username) {
       return Promise.resolve(new SuccessModel({
-        username: req.cookie.username
+        username: req.session.username
       }))
     }
     return Promise.resolve(new ErrorModel('尚未登录'))

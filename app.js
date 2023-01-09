@@ -2,6 +2,9 @@ const querystring = require('node:querystring')
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 
+// 初始 Session 数据
+const SESSION_DATA = {}
+
 // 用于处理 post data
 const getPostData = (req) => {
   const promise = new Promise((resolve, reject) => {
@@ -52,6 +55,22 @@ const serverHandle = (req, res) => {
     req.cookie[itemKey] = itemVal
   });
 
+  // 统一解析 Session
+  let userId = req.cookie.userid
+  let isNeedSetCookie = false // 是否需要设置 Session
+  if (userId) {  // Cookie 有 userid 时
+    if (!SESSION_DATA[userId]) {
+      SESSION_DATA[userId] = {}
+    }
+  } else {  // Cookie 没有 userid 时
+    isNeedSetCookie = true
+    userId = `${Date.now()}_${Math.random()}` // 生成一个随机的 userId
+    SESSION_DATA[userId] = {}
+  }
+  // 浅拷贝
+  // SESSION_DATA[userId] 会随 req.session 的变化而变化
+  req.session = SESSION_DATA[userId]
+
   // 处理 post data
   getPostData(req).then(postData => {
     req.body = postData
@@ -60,6 +79,9 @@ const serverHandle = (req, res) => {
     const blogResult = handleBlogRouter(req, res)
     if (blogResult) {
       blogResult.then(blogData => {
+        if (isNeedSetCookie) {
+          res.setHeader('Set-Cookie', `userid=${userId}; path=/; HttpOnly`)
+        }
         res.end(
           JSON.stringify(blogData)
         )
@@ -71,6 +93,9 @@ const serverHandle = (req, res) => {
     const userResult = handleUserRouter(req, res)
     if (userResult) {
       userResult.then(userData => {
+        if (isNeedSetCookie) {
+          res.setHeader('Set-Cookie', `userid=${userId}; path=/; HttpOnly`)
+        }
         res.end(
           JSON.stringify(userData)
         )
