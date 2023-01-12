@@ -4,7 +4,7 @@ const { REDIS_CONFIG } = require('../config/db')
 // 创建客户端
 const redisClient = redis.createClient(REDIS_CONFIG.port, REDIS_CONFIG.host);
 
-!(async function () {
+(async function () {
   await redisClient.connect()
     .then(() => console.log('Redis connect success.'))
     .catch(console.error)
