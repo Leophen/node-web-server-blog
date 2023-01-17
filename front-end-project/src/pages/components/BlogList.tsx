@@ -17,7 +17,7 @@ const BlogList = () => {
   const [blogList, setBlogList] = useState([])
   const updateBlogList = () => {
     getBlogList().then(res => {
-      setBlogList(res.data)
+      setBlogList(res.data.data)
     }).catch(err => {
       console.error(err)
     })

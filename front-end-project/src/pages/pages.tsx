@@ -12,10 +12,18 @@ import LoginModal from './components/LoginModal';
 import { useState } from 'react';
 import { IconPlus } from '@arco-design/web-react/icon';
 import BlogEdit from './components/BlogEdit';
+import { useDispatch, useSelector } from 'react-redux'
+import { Message } from '@arco-design/web-react';
 
-const temp_ifLogin = false
+interface LoginReducer {
+  status: boolean
+}
 
 const Pages = () => {
+  const loginStatus = useSelector<{
+    loginReducer: LoginReducer
+  }>((state) => state.loginReducer.status)
+
   const location = useLocation()
 
   const getPageName = () => {
@@ -26,9 +34,12 @@ const Pages = () => {
     return '博客列表'
   }
 
+  const dispatch = useDispatch()
+
   const handleLogout = (key: string) => {
     if (key === 'logout') {
-      console.log('退出登录')
+      dispatch.loginReducer.logout()
+      Message.success('已退出登录')
     }
   }
 
@@ -41,7 +52,7 @@ const Pages = () => {
         <div className="blog-header-txt">
           <span>{getPageName()}</span>
           <section className="blog-header-user">
-            {temp_ifLogin && (<>
+            {loginStatus && (<>
               <Button
                 shape='round'
                 type='primary'
@@ -57,7 +68,7 @@ const Pages = () => {
               />
             </>)}
 
-            {temp_ifLogin ? (
+            {loginStatus ? (
               <Dropdown
                 droplist={
                   <Menu onClickMenuItem={handleLogout}>

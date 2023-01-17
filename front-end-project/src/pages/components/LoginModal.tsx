@@ -6,6 +6,7 @@ import { useFormik } from "formik";
 import _ from "lodash";
 import * as Yup from 'yup'
 import { loginBlog } from "../../http/api/user";
+import { useDispatch } from 'react-redux'
 
 const TabPane = Tabs.TabPane;
 
@@ -16,12 +17,16 @@ interface LoginModal {
 
 interface InnerPageType {
   type: 'login' | 'logout'
+  onClose: () => void
 }
 
 const InnerPage = (props: InnerPageType) => {
   const {
-    type = 'login'
+    type = 'login',
+    onClose
   } = props
+
+  const dispatch = useDispatch()
 
   const formik = useFormik({
     initialValues: {
@@ -46,6 +51,8 @@ const InnerPage = (props: InnerPageType) => {
           const { errno } = res.data
           if (errno !== -1) {
             Message.success('登录成功')
+            dispatch.loginReducer.login()
+            onClose?.()
           } else {
             Message.error('账号或密码错误')
           }
@@ -109,10 +116,10 @@ const LoginModal = (props: LoginModal) => {
     >
       <Tabs defaultActiveTab='login'>
         <TabPane key='login' title='登录'>
-          <InnerPage type='login' />
+          <InnerPage type='login' onClose={() => onClose?.()} />
         </TabPane>
         <TabPane key='logout' title='注册'>
-          <InnerPage type='logout' />
+          <InnerPage type='logout' onClose={() => onClose?.()} />
         </TabPane>
       </Tabs>
     </Modal>
