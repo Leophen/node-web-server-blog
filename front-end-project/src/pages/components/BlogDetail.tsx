@@ -100,6 +100,7 @@ const BlogDetail = () => {
       </footer>
 
       <BlogEdit
+        mode='update'
         visible={editShow}
         title={temp.title}
         content={temp.content}

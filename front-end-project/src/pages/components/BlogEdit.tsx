@@ -5,19 +5,23 @@ import { useEffect } from 'react';
 import * as Yup from 'yup'
 
 interface BlogDetailType {
+  mode: 'new' | 'update'
   visible: boolean
-  title: string
-  content: string
+  title?: string
+  content?: string
   onClose: () => void
 }
 
 const BlogEdit = (props: BlogDetailType) => {
   const {
+    mode = 'new',
     visible = false,
     title = '',
     content = '',
     onClose
   } = props
+
+  const isNewMode = mode === 'new'
 
   const formik = useFormik({
     initialValues: {
@@ -33,7 +37,11 @@ const BlogEdit = (props: BlogDetailType) => {
         .required('请输入博客内容')
     }),
     onSubmit: (values) => {
-      console.log('submit', values)
+      if (isNewMode) {
+        console.log('submit new', values)
+      } else {
+        console.log('submit update', values)
+      }
     }
   })
 
@@ -57,8 +65,9 @@ const BlogEdit = (props: BlogDetailType) => {
   return (
     <Drawer
       width={500}
-      title={<span>编辑博客</span>}
+      title={<span>{`${isNewMode ? '新建' : '编辑'}博客`}</span>}
       visible={visible}
+      placement={isNewMode ? 'left' : 'right'}
       onOk={handleConfirm}
       onCancel={() => onClose?.()}
     >

@@ -33,8 +33,11 @@ body {
 }
 
 .blog-header-user {
+  display: flex;
+  align-items: center;
   .arco-avatar {
     cursor: pointer;
+    margin-left: 16px;
   }
 }
 
@@ -86,8 +89,8 @@ body {
 
 .blog-list-footer {
   width: 100%;
+  margin: 36px 0 24px;
   .arco-pagination {
-    margin-top: 20px;
     .arco-pagination-option {
       margin-left: auto;
     }

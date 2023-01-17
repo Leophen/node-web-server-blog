@@ -10,6 +10,8 @@ import { Menu } from '@arco-design/web-react';
 import { Button } from '@arco-design/web-react';
 import LoginModal from './components/LoginModal';
 import { useState } from 'react';
+import { IconPlus } from '@arco-design/web-react/icon';
+import BlogEdit from './components/BlogEdit';
 
 const temp_ifLogin = false
 
@@ -30,6 +32,7 @@ const Pages = () => {
     }
   }
 
+  const [editShow, setEditShow] = useState(false)
   const [loginShow, setLoginShow] = useState(false)
 
   return (
@@ -38,6 +41,22 @@ const Pages = () => {
         <div className="blog-header-txt">
           <span>{getPageName()}</span>
           <section className="blog-header-user">
+            {temp_ifLogin && (<>
+              <Button
+                shape='round'
+                type='primary'
+                icon={<IconPlus />}
+                onClick={() => setEditShow(true)}
+              >
+                新建博客
+              </Button>
+              <BlogEdit
+                mode='new'
+                visible={editShow}
+                onClose={() => setEditShow(false)}
+              />
+            </>)}
+
             {temp_ifLogin ? (
               <Dropdown
                 droplist={

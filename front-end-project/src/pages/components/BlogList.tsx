@@ -1,153 +1,9 @@
 import { Divider, Tag, Pagination } from '@arco-design/web-react';
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs';
-
-const temp = [
-  {
-    id: 1,
-    title: '标题 A',
-    content: '内容 A',
-    createTime: 1669359152188,
-    author: '作者 A',
-    type: '类型 A'
-  },
-  {
-    id: 2,
-    title: '标题 B',
-    content: '内容 B',
-    createTime: 1669359152288,
-    author: '作者 B',
-    type: '类型 B'
-  },
-  {
-    id: 3,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 4,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 5,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 6,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 7,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 8,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 9,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 10,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 11,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 12,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 13,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 14,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 15,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 16,
-    title: '标题 C',
-    content: '内容 C',
-    createTime: 1669359152388,
-    author: '作者 C',
-    type: '类型 C'
-  },
-  {
-    id: 17,
-    title: '标题 D',
-    content: '内容 D',
-    createTime: 1669359152388,
-    author: '作者 D',
-    type: '类型 D'
-  },
-  {
-    id: 18,
-    title: '标题 D',
-    content: '内容 D',
-    createTime: 1669359152388,
-    author: '作者 D',
-    type: '类型 D'
-  }
-]
+import { getBlogList } from '../../http/api/blog';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 export const getTime = (time: number) => dayjs(time).format('YYYY年MM月DD日 HH:mm:ss')
 
@@ -158,9 +14,21 @@ const BlogList = () => {
     console.log(pageNumber, pageSize)
   }
 
+  const [blogList, setBlogList] = useState([])
+  const updateBlogList = () => {
+    getBlogList().then(res => {
+      setBlogList(res.data)
+    }).catch(err => {
+      console.error(err)
+    })
+  }
+  useEffect(() => {
+    updateBlogList()
+  }, [])
+
   return (
     <div className="blog-list-wrapper">
-      {temp.map((item, index) => (
+      {blogList.map((item, index) => (
         <section
           className="blog-list-item"
           key={`${item.id}${index}`}
@@ -197,7 +65,7 @@ const BlogList = () => {
       <footer className="blog-list-footer">
         <Pagination
           showTotal
-          total={temp.length}
+          total={blogList.length}
           showJumper
           sizeCanChange
           onChange={handlePageChange}
