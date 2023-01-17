@@ -1,41 +1,41 @@
 import serviceAxios from "../index";
 
-export const getBlogList = (params?) => {
+export const getBlogList = (data?) => {
   return serviceAxios({
     url: "/api/blog/list",
     method: "get",
-    params,
+    data,
   });
 };
 
-export const getBlogDetail = (params?) => {
+export const getBlogDetail = (data?) => {
   return serviceAxios({
     url: "/api/blog/detail",
     method: "get",
-    params,
+    data,
   });
 };
 
-export const createBlog = (params?) => {
+export const createBlog = (data?) => {
   return serviceAxios({
     url: "/api/blog/new",
     method: "post",
-    params,
+    data,
   });
 };
 
-export const updateBlog = (params?) => {
+export const updateBlog = (data?) => {
   return serviceAxios({
     url: "/api/blog/update",
     method: "post",
-    params,
+    data,
   });
 };
 
-export const deleteBlog = (params?) => {
+export const deleteBlog = (data?) => {
   return serviceAxios({
     url: "/api/blog/del",
     method: "post",
-    params,
+    data,
   });
 };

@@ -1,9 +1,9 @@
-import serviceAxios from "../index";
+import serviceAxios from '../index'
 
-export const loginBlog = (params?) => {
+export const loginBlog = (data?) => {
   return serviceAxios({
-    url: "/api/user/login",
-    method: "post",
-    params,
-  });
-};
+    url: '/api/user/login',
+    method: 'post',
+    data
+  })
+}

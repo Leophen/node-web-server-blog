@@ -1,6 +1,5 @@
 import axios from "axios";
 import serverConfig from "./config";
-import qs from "qs";
 
 // 创建 axios 请求实例
 const serviceAxios = axios.create({
@@ -18,12 +17,7 @@ serviceAxios.interceptors.request.use(
     }
     // 设置请求头
     if (!config.headers["content-type"]) { // 如果没有设置请求头
-      if (config.method === 'post') {
-        config.headers["content-type"] = "application/x-www-form-urlencoded"; // post 请求
-        config.data = qs.stringify(config.data); // 序列化,比如表单数据
-      } else {
-        config.headers["content-type"] = "application/json"; // 默认类型
-      }
+      config.headers["content-type"] = "application/json"; // 默认类型
     }
     return config;
   },
@@ -35,10 +29,7 @@ serviceAxios.interceptors.request.use(
 // 创建响应拦截
 serviceAxios.interceptors.response.use(
   (res) => {
-    const data = res.data;
-    // 处理自己的业务逻辑，比如判断 token 是否过期等等
-    // 代码块
-    return data;
+    return res;
   },
   (error) => {
     let message = "";

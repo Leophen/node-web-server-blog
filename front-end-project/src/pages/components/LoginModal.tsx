@@ -5,6 +5,7 @@ import { Tabs, Modal } from "@arco-design/web-react"
 import { useFormik } from "formik";
 import _ from "lodash";
 import * as Yup from 'yup'
+import { loginBlog } from "../../http/api/user";
 
 const TabPane = Tabs.TabPane;
 
@@ -36,6 +37,22 @@ const InnerPage = (props: InnerPageType) => {
         .required('请输入密码')
     }),
     onSubmit: (values) => {
+      const { username, password } = values
+      if (type === 'login') {
+        loginBlog({
+          username,
+          password
+        }).then((res) => {
+          const { errno } = res.data
+          if (errno !== -1) {
+            Message.success('登录成功')
+          } else {
+            Message.error('账号或密码错误')
+          }
+        }).catch(err => {
+          console.error(err)
+        })
+      }
       console.log('submit', type, values)
     }
   })
@@ -59,7 +76,7 @@ const InnerPage = (props: InnerPageType) => {
         placeholder='请输入用户名'
         onChange={((val: string) => setFieldValue('username', val))}
       />
-      <Input
+      <Input.Password
         value={values.password}
         maxLength={25}
         showWordLimit={false}
