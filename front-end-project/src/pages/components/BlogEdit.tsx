@@ -4,6 +4,7 @@ import { useFormik } from 'formik'
 import _ from 'lodash';
 import { useEffect } from 'react';
 import * as Yup from 'yup'
+import { createBlog } from '../../http/api/blog';
 
 interface BlogDetailType {
   mode: 'new' | 'update'
@@ -41,8 +42,23 @@ const BlogEdit = (props: BlogDetailType) => {
         .required('请输入博客内容')
     }),
     onSubmit: (values) => {
+      const { title, content, tag } = values
       if (isNewMode) {
-        console.log('submit new', values)
+        createBlog({
+          title,
+          content,
+          tag: JSON.stringify(tag)
+        }).then((res) => {
+          const { errno } = res.data
+          if (errno !== -1) {
+            Message.success('创建博客成功')
+            onClose?.()
+          } else {
+            Message.error('创建博客失败')
+          }
+        }).catch(err => {
+          console.error(err)
+        })
       } else {
         console.log('submit update', values)
       }
