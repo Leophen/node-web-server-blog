@@ -1,3 +1,4 @@
+import { InputTag } from '@arco-design/web-react';
 import { Drawer, Input, Message } from '@arco-design/web-react';
 import { useFormik } from 'formik'
 import _ from 'lodash';
@@ -9,6 +10,7 @@ interface BlogDetailType {
   visible: boolean
   title?: string
   content?: string
+  tag?: string[]
   onClose: () => void
 }
 
@@ -18,6 +20,7 @@ const BlogEdit = (props: BlogDetailType) => {
     visible = false,
     title = '',
     content = '',
+    tag = [],
     onClose
   } = props
 
@@ -26,7 +29,8 @@ const BlogEdit = (props: BlogDetailType) => {
   const formik = useFormik({
     initialValues: {
       title,
-      content
+      content,
+      tag
     },
     validationSchema: Yup.object({
       title: Yup.string()
@@ -94,6 +98,18 @@ const BlogEdit = (props: BlogDetailType) => {
           placeholder='请输入博客内容'
           autoSize
           onChange={((val: string) => setFieldValue('content', val))}
+        />
+      </section>
+      <section className="blog-edit-item">
+        <div className="blog-edit-item-title">
+          博客标签
+        </div>
+        <InputTag
+          allowClear
+          size='default'
+          value={values.tag}
+          placeholder='请输入博客标签'
+          onChange={((val: string[]) => setFieldValue('tag', val))}
         />
       </section>
     </Drawer>
