@@ -5,8 +5,9 @@ import { Tabs, Modal } from "@arco-design/web-react"
 import { useFormik } from "formik";
 import _ from "lodash";
 import * as Yup from 'yup'
-import { loginBlog } from "../../http/api/user";
+import { loginBlog, logoutBlog } from "../../http/api/user";
 import { useDispatch } from 'react-redux'
+import { useEffect } from "react";
 
 const TabPane = Tabs.TabPane;
 
@@ -16,12 +17,14 @@ interface LoginModal {
 }
 
 interface InnerPageType {
+  visible: boolean
   type: 'login' | 'logout'
   onClose: () => void
 }
 
 const InnerPage = (props: InnerPageType) => {
   const {
+    visible = false,
     type = 'login',
     onClose
   } = props
@@ -59,10 +62,31 @@ const InnerPage = (props: InnerPageType) => {
         }).catch(err => {
           console.error(err)
         })
+      } else {
+        logoutBlog({
+          username,
+          password
+        }).then((res) => {
+          const { errno } = res.data
+          if (errno !== -1) {
+            Message.success('注册成功')
+            onClose?.()
+          } else {
+            Message.error(res.data.message || '注册失败')
+          }
+        }).catch(err => {
+          console.error(err)
+        })
       }
-      console.log('submit', type, values)
     }
   })
+
+  useEffect(() => {
+    if (visible) {
+      setFieldValue('username', '')
+      setFieldValue('password', '')
+    }
+  }, [visible])
 
   const { values, setFieldValue, errors, handleSubmit } = formik
 
@@ -116,10 +140,10 @@ const LoginModal = (props: LoginModal) => {
     >
       <Tabs defaultActiveTab='login'>
         <TabPane key='login' title='登录'>
-          <InnerPage type='login' onClose={() => onClose?.()} />
+          <InnerPage visible={visible} type='login' onClose={() => onClose?.()} />
         </TabPane>
         <TabPane key='logout' title='注册'>
-          <InnerPage type='logout' onClose={() => onClose?.()} />
+          <InnerPage visible={visible} type='logout' onClose={() => onClose?.()} />
         </TabPane>
       </Tabs>
     </Modal>

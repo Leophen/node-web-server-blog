@@ -1,9 +1,25 @@
-const { login } = require('../controller/user')
+const { login, logout } = require('../controller/user')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 const { set } = require('../db/redis')
 
 const handleUserRouter = (req, res) => {
   const method = req.method
+
+  // 注册
+  if (method === 'POST' && req.path === '/api/user/logout') {
+    const { username, password } = req.body
+    const result = logout(username, password)
+
+    return result.then(data => {
+      if (data === -2) {
+        return new ErrorModel('账号已存在')
+      }
+      if (data === -1) {
+        return new ErrorModel('注册失败')
+      }
+      return new SuccessModel()
+    })
+  }
 
   // 登录
   if (method === 'POST' && req.path === '/api/user/login') {

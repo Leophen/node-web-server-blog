@@ -7,3 +7,11 @@ export const loginBlog = (data?) => {
     data
   })
 }
+
+export const logoutBlog = (data?) => {
+  return serviceAxios({
+    url: '/api/user/logout',
+    method: 'post',
+    data
+  })
+}
