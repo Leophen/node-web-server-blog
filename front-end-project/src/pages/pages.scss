@@ -81,6 +81,12 @@ body {
   justify-content: space-between;
 }
 
+.blog-item-type {
+  .arco-tag {
+    margin-right: 8px;
+  }
+}
+
 .blog-item-info {
   opacity: 0.8;
   display: flex;

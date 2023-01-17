@@ -46,9 +46,11 @@ const BlogList = () => {
 
           <footer className="blog-item-footer">
             <section className="blog-item-type">
-              <Tag color='arcoblue' bordered>
-                {item.type}
-              </Tag>
+              {item.tag && JSON.parse(item.tag).map(item => (
+                <Tag color='arcoblue' bordered>
+                  {item}
+                </Tag>
+              ))}
             </section>
             <div className="blog-item-info">
               <span className="blog-item-author">
@@ -56,7 +58,7 @@ const BlogList = () => {
               </span>
               <Divider type='vertical' />
               <span className="blog-item-time">
-                修改于 {getTime(item.createTime)}
+                修改于 {getTime(item.createtime)}
               </span>
             </div>
           </footer>
