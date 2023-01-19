@@ -1,14 +1,25 @@
-const { login, logout } = require('../controller/user')
-const { SuccessModel, ErrorModel } = require('../model/resModel')
-const { set } = require('../db/redis')
+const {
+  login,
+  register
+} = require('../controller/user')
+const {
+  SuccessModel,
+  ErrorModel
+} = require('../model/resModel')
+const {
+  set
+} = require('../db/redis')
 
 const handleUserRouter = (req, res) => {
   const method = req.method
 
   // 注册
-  if (method === 'POST' && req.path === '/api/user/logout') {
-    const { username, password } = req.body
-    const result = logout(username, password)
+  if (method === 'POST' && req.path === '/api/user/register') {
+    const {
+      username,
+      password
+    } = req.body
+    const result = register(username, password)
 
     return result.then(data => {
       if (data === -2) {
@@ -23,7 +34,10 @@ const handleUserRouter = (req, res) => {
 
   // 登录
   if (method === 'POST' && req.path === '/api/user/login') {
-    const { username, password } = req.body
+    const {
+      username,
+      password
+    } = req.body
     const result = login(username, password)
 
     return result.then(data => {

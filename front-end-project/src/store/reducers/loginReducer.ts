@@ -1,5 +1,5 @@
 const defaultState = {
-  status: false
+  status: false,
 }
 
 const handleLogin = (state) => {
@@ -18,8 +18,8 @@ const loginReducer = {
   state: defaultState,
   reducers: {
     login: (state) => handleLogin(state),
-    logout: (state) => handleLogout(state)
-  }
+    logout: (state) => handleLogout(state),
+  },
 }
 
 export default loginReducer

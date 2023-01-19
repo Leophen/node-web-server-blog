@@ -1,4 +1,6 @@
-const { exec } = require('../db/mysql')
+const {
+  exec
+} = require('../db/mysql')
 
 /**
  * 登录接口
@@ -22,7 +24,7 @@ const login = (username, password) => {
  * @param {*} password 密码
  * @returns 注册是否成功
  */
-const logout = (username, password) => {
+const register = (username, password) => {
   const querySql = `SELECT * FROM users
   WHERE username = '${username}'`;
   const insertSql = `INSERT INTO users (username, password)
@@ -45,5 +47,5 @@ const logout = (username, password) => {
 
 module.exports = {
   login,
-  logout
+  register
 }

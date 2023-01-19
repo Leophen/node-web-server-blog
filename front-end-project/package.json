@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@arco-design/web-react": "^2.43.2",
+    "@arco-design/web-react": "^2.44.0",
     "dayjs": "^1.11.7",
     "formik": "^2.2.9",
     "lodash": "^4.17.21",
