@@ -1,7 +1,10 @@
 const querystring = require('node:querystring')
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
-const { get, set } = require('./src/db/redis')
+const {
+  get,
+  set
+} = require('./src/db/redis')
 
 // 用于处理 post data
 const getPostData = (req) => {
@@ -44,7 +47,7 @@ const serverHandle = (req, res) => {
 
   // 统一解析 Cookie
   req.cookie = {}
-  const cookieStr = req.headers.cookie || ''  // k1=v1;k2=v2
+  const cookieStr = req.headers.cookie || '' // k1=v1;k2=v2
   cookieStr.split(';').forEach(item => {
     if (!item) return
     const itemArr = item.split('=')
@@ -73,7 +76,6 @@ const serverHandle = (req, res) => {
     } else {
       req.session = sessionData
     }
-    console.log('req.session ', req.session)
 
     // 处理 post data
     return getPostData(req)
@@ -109,7 +111,9 @@ const serverHandle = (req, res) => {
     }
 
     // 未命中路由，返回 404
-    res.writeHead(404, { "Content-type": "text/plain" })
+    res.writeHead(404, {
+      "Content-type": "text/plain"
+    })
     res.write("404 not Found\n")
     res.end()
   })

@@ -52,6 +52,15 @@ const handleUserRouter = (req, res) => {
     })
   }
 
+  // 退出登录
+  if (method === 'GET' && req.path === '/api/user/logout') {
+    if (req.session.username) {
+      res.setHeader('Set-Cookie', `userid=; path=/; HttpOnly`)
+      return Promise.resolve(new SuccessModel('退出登录成功'))
+    }
+    return Promise.resolve(new ErrorModel('退出登录失败'))
+  }
+
   // 登陆验证的测试
   if (method === 'GET' && req.path === '/api/user/login-test') {
     if (req.session.username) {

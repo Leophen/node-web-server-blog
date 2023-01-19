@@ -15,7 +15,7 @@ import BlogEdit from './components/BlogEdit'
 import { useDispatch, useSelector } from 'react-redux'
 import { Message } from '@arco-design/web-react'
 import { useEffect } from 'react'
-import { loginTest } from '../http/api/user'
+import { loginTest, logoutBlog } from '../http/api/user'
 
 interface LoginReducer {
   status: boolean
@@ -46,8 +46,10 @@ const Pages = () => {
 
   const handleLogout = (key: string) => {
     if (key === 'logout') {
-      dispatch.loginReducer.logout()
-      Message.success('已退出登录')
+      logoutBlog().then(() => {
+        dispatch.loginReducer.logout()
+        Message.success('已退出登录')
+      })
     }
   }
 

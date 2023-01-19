@@ -1,43 +1,44 @@
 body {
-  color: #ffffffe6;
   background: #24272c;
+  color: #ffffffe6;
 }
 
 .blog-wrapper {
-  width: 1200px;
   margin: auto;
+  width: 1200px;
 }
 
 .blog-header {
   position: fixed;
-  background: rgba(36, 39, 44, 0.8);
-  backdrop-filter: blur(8px);
   top: 0;
-  left: 0;
   right: 0;
+  left: 0;
   z-index: 20;
   display: flex;
   align-items: center;
   height: 72px;
-  font-size: 24px;
-  font-weight: bold;
   border-bottom: 1px solid var(--color-fill-3);
+  background: rgba(36, 39, 44, 0.8);
+  font-weight: bold;
+  font-size: 24px;
+
+  backdrop-filter: blur(8px);
 }
 
 .blog-header-txt {
-  width: 1200px;
-  margin: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: auto;
+  width: 1200px;
 }
 
 .blog-header-user {
   display: flex;
   align-items: center;
   .arco-avatar {
-    cursor: pointer;
     margin-left: 16px;
+    cursor: pointer;
   }
 }
 
@@ -51,8 +52,8 @@ body {
 }
 
 .blog-list-item {
-  border-bottom: 1px solid var(--color-fill-3);
   padding: 20px 0;
+  border-bottom: 1px solid var(--color-fill-3);
 }
 
 .blog-item-header {
@@ -88,14 +89,14 @@ body {
 }
 
 .blog-item-info {
-  opacity: 0.8;
   display: flex;
   align-items: center;
+  opacity: 0.8;
 }
 
 .blog-list-footer {
-  width: 100%;
   margin: 36px 0 24px;
+  width: 100%;
   .arco-pagination {
     .arco-pagination-option {
       margin-left: auto;
@@ -104,9 +105,9 @@ body {
 }
 
 .blog-error-wrapper {
-  height: calc(100vh - 72px);
   display: flex;
   align-items: center;
+  height: calc(100vh - 72px);
   .arco-result {
     transform: translateY(-100px);
   }
@@ -120,6 +121,14 @@ body {
 
 .blog-detail-wrapper {
   padding: 20px 0;
+  .blog-back-home {
+    height: 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    &:hover {
+      background-color: #000;
+    }
+  }
   .arco-typography {
     margin-top: 20px;
   }
@@ -163,8 +172,8 @@ body {
     transform: scale(1.2);
   }
   .arco-tabs-header-nav {
-    width: fit-content;
     margin: auto;
+    width: fit-content;
     .arco-tabs-header-title-text {
       font-size: 18px;
     }
@@ -177,5 +186,6 @@ body {
 .login-page {
   display: flex;
   flex-direction: column;
+
   gap: 20px;
 }
