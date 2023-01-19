@@ -34,6 +34,10 @@ const BlogDetail = () => {
     }
   }
 
+  const handleEditSuccess = () => {
+    console.log('edit success')
+  }
+
   const handleDelete = () => {
     if (temp_ifLogin) {
       Modal.confirm({
@@ -84,7 +88,7 @@ const BlogDetail = () => {
         </section>
       </footer>
 
-      <BlogEdit mode="update" visible={editShow} title={temp.title} content={temp.content} onClose={() => setEditShow(false)} />
+      <BlogEdit mode="update" visible={editShow} title={temp.title} content={temp.content} onSuccess={handleEditSuccess} onClose={() => setEditShow(false)} />
     </div>
   )
 }

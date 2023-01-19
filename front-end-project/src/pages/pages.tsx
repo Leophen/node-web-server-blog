@@ -44,6 +44,10 @@ const Pages = () => {
     return '博客列表'
   }
 
+  const handleAddBlog = () => {
+    setEditShow(true)
+  }
+
   const handleLogout = (key: string) => {
     if (key === 'logout') {
       logoutBlog().then(() => {
@@ -56,6 +60,12 @@ const Pages = () => {
   const [editShow, setEditShow] = useState(false)
   const [loginShow, setLoginShow] = useState(false)
 
+  const handleAddSuccess = () => {
+    const addTime = new Date().getTime()
+    setUpdateListVal(addTime)
+  }
+  const [updateListVal, setUpdateListVal] = useState(0)
+
   return (
     <div className="blog-wrapper">
       <header className="blog-header">
@@ -64,10 +74,10 @@ const Pages = () => {
           <section className="blog-header-user">
             {loginStatus && (
               <>
-                <Button shape="round" type="primary" icon={<IconPlus />} onClick={() => setEditShow(true)}>
+                <Button shape="round" type="primary" icon={<IconPlus />} onClick={handleAddBlog}>
                   新建博客
                 </Button>
-                <BlogEdit mode="new" visible={editShow} onClose={() => setEditShow(false)} />
+                <BlogEdit mode="new" visible={editShow} onSuccess={handleAddSuccess} onClose={() => setEditShow(false)} />
               </>
             )}
 
@@ -96,7 +106,7 @@ const Pages = () => {
       </header>
       <article className="blog-content">
         <Routes>
-          <Route path="/" element={<BlogList />} />
+          <Route path="/" element={<BlogList key={updateListVal} />} />
           <Route path="detail/:blogId" element={<BlogDetail />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
