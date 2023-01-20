@@ -1,4 +1,6 @@
-const { exec } = require('../db/mysql')
+const {
+  exec
+} = require('../db/mysql')
 
 const getList = (author, type) => {
   let sql = `select * from blogs where 1=1 `
@@ -17,12 +19,18 @@ const getList = (author, type) => {
 const getDetail = (id) => {
   const sql = `select * from blogs where id = '${id}'`
   return exec(sql).then(rows => {
+    console.log(id, rows, 'jjj')
     return rows[0]
   })
 }
 
 const newBlog = (blogData = {}) => {
-  const { title, content, author, tag } = blogData
+  const {
+    title,
+    content,
+    author,
+    tag
+  } = blogData
   const createTime = Date.now()
 
   const sql = `
@@ -44,7 +52,11 @@ const newBlog = (blogData = {}) => {
  * @returns 是否更新成功
  */
 const updateBlog = (id, blogData = {}) => {
-  const { title, content, tag } = blogData
+  const {
+    title,
+    content,
+    tag
+  } = blogData
   const sql = `
     update blogs set title = '${title}', content = '${content}', type = '${tag}'
     where id = ${id}

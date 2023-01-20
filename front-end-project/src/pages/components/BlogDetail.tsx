@@ -1,33 +1,53 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Breadcrumb, Divider, Typography, Message, Modal } from '@arco-design/web-react'
 import { IconHome, IconEdit, IconDelete } from '@arco-design/web-react/icon'
 import { getTime } from './BlogList'
 import BlogEdit from './BlogEdit'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { LoginReducer } from '../pages'
+import { getBlogDetail } from '../../http/api/blog'
 
 const { Title, Paragraph } = Typography
 const BreadcrumbItem = Breadcrumb.Item
 
-const temp = {
-  id: 1,
-  title: '标题 A',
-  content: '内容 A',
-  createTime: 1669359152188,
-  author: '作者 A',
-  type: '类型 A',
-}
-
-const temp_ifLogin = true
-
 const BlogDetail = () => {
+  const loginStatus = useSelector<{
+    loginReducer: LoginReducer
+  }>((state) => state.loginReducer.status)
   const navigate = useNavigate()
   const params = useParams()
-  console.log('params is ', params)
+
+  const { blogId } = params
+  const [blogData, setBlogData] = useState({
+    title: '标题',
+    content: '内容',
+    createtime: 0,
+    author: '作者',
+    type: '标签',
+  })
+
+  useEffect(() => {
+    getBlogDetail({ id: blogId }).then((res) => {
+      if (res.data.data) {
+        const { title, content, createtime, author, type } = res.data.data
+        blogData.title = title
+        blogData.content = content
+        blogData.createtime = createtime
+        blogData.author = author
+        blogData.type = type ? JSON.parse(type) : []
+        setBlogData({ ...blogData })
+      } else {
+        Message.error('博客不存在')
+        navigate('/')
+      }
+    })
+  }, [])
 
   const [editShow, setEditShow] = useState(false)
   const handleEdit = () => {
-    if (temp_ifLogin) {
+    if (loginStatus) {
       setEditShow(true)
     } else {
       Message.warning('您还未登录，请先登录')
@@ -39,10 +59,10 @@ const BlogDetail = () => {
   }
 
   const handleDelete = () => {
-    if (temp_ifLogin) {
+    if (loginStatus) {
       Modal.confirm({
         title: '删除博客',
-        content: `您确定要删除「${temp.title}」这篇博客吗，删除后将无法恢复。`,
+        content: `您确定要删除「${blogData.title}」这篇博客吗，删除后将无法恢复。`,
         okButtonProps: {
           status: 'danger',
         },
@@ -65,15 +85,15 @@ const BlogDetail = () => {
       </Breadcrumb>
 
       <Typography>
-        <Title heading={5}>{temp.title}</Title>
-        <Paragraph>{temp.content}</Paragraph>
+        <Title heading={5}>{blogData.title}</Title>
+        <Paragraph>{blogData.content}</Paragraph>
       </Typography>
 
       <footer className="blog-detail-footer">
         <section>
-          <span className="blog-detail-author">{temp.author}</span>
+          <span className="blog-detail-author">{blogData.author}</span>
           <Divider type="vertical" />
-          <span className="blog-detail-time">创建于 {getTime(temp.createTime)}</span>
+          <span className="blog-detail-time">创建于 {getTime(blogData.createtime)}</span>
         </section>
 
         <section className="blog-detail-change">
@@ -88,7 +108,7 @@ const BlogDetail = () => {
         </section>
       </footer>
 
-      <BlogEdit mode="update" visible={editShow} title={temp.title} content={temp.content} onSuccess={handleEditSuccess} onClose={() => setEditShow(false)} />
+      <BlogEdit mode="update" visible={editShow} title={blogData.title} content={blogData.content} onSuccess={handleEditSuccess} onClose={() => setEditShow(false)} />
     </div>
   )
 }
