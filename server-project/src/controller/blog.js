@@ -10,7 +10,7 @@ const getList = (author, type) => {
   if (type) {
     sql += `and type = '${type}'`
   }
-  sql += `order by createtime desc`
+  sql += `order by updatetime desc`
 
   // 返回 promise
   return exec(sql)
@@ -33,7 +33,7 @@ const newBlog = (blogData = {}) => {
   const createTime = Date.now()
 
   const sql = `
-    insert into blogs (title, content, createtime, author, tag) values ('${title}', '${content}', ${createTime}, '${author}', '${tag}')
+    insert into blogs (title, content, updatetime, author, tag) values ('${title}', '${content}', ${createTime}, '${author}', '${tag}')
   `
 
   return exec(sql).then(insertData => {
@@ -60,8 +60,10 @@ const updateBlog = (blogData = {}, sessionAuthor) => {
     author,
     tag
   } = blogData
+  const updateTime = Date.now()
+
   const sql = `
-    update blogs set title = '${title}', content = '${content}', author = '${author}', tag = '${tag}'
+    update blogs set title = '${title}', content = '${content}', updatetime = '${updateTime}', author = '${author}', tag = '${tag}'
     where id = ${id}
   `
 

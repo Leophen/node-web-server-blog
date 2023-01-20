@@ -23,7 +23,7 @@ const BlogDetail = () => {
   const [blogData, setBlogData] = useState({
     title: '标题',
     content: '内容',
-    createtime: 0,
+    updatetime: 0,
     author: '作者',
     tag: [],
   })
@@ -65,10 +65,10 @@ const BlogDetail = () => {
     getBlogDetail({ id: blogId })
       .then((res) => {
         if (res.data.data) {
-          const { title, content, createtime, author, tag } = res.data.data
+          const { title, content, updatetime, author, tag } = res.data.data
           blogData.title = title
           blogData.content = content
-          blogData.createtime = createtime
+          blogData.updatetime = updatetime
           blogData.author = author
           blogData.tag = tag ? JSON.parse(tag) : []
           setBlogData({ ...blogData })
@@ -138,7 +138,7 @@ const BlogDetail = () => {
         <section>
           <span className="blog-detail-author">{blogData.author}</span>
           <Divider type="vertical" />
-          <span className="blog-detail-time">创建于 {getTime(blogData.createtime)}</span>
+          <span className="blog-detail-time">修改于 {getTime(blogData.updatetime)}</span>
         </section>
 
         <section className="blog-detail-change">

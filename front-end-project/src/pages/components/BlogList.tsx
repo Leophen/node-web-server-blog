@@ -50,7 +50,7 @@ const BlogList = () => {
             <div className="blog-item-info">
               <span className="blog-item-author">{item.author}</span>
               <Divider type="vertical" />
-              <span className="blog-item-time">修改于 {getTime(item.createtime)}</span>
+              <span className="blog-item-time">修改于 {getTime(item.updatetime)}</span>
             </div>
           </footer>
         </section>
