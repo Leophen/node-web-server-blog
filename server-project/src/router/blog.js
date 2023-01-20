@@ -1,4 +1,5 @@
 const {
+  getTotal,
   getList,
   getDetail,
   newBlog,
@@ -21,11 +22,20 @@ const handleBlogRouter = (req, res) => {
   const method = req.method
   const id = req.body.id
 
+  // 获取博客列表总数
+  if (method === 'GET' && req.path === '/api/blog/count') {
+    const result = getTotal()
+
+    return result.then(count => {
+      return new SuccessModel(count)
+    })
+  }
+
   // 获取博客列表
-  if (method === 'GET' && req.path === '/api/blog/list') {
-    const author = req.query.author || ''
-    const type = req.query.type || ''
-    const result = getList(author, type)
+  if (method === 'POST' && req.path === '/api/blog/list') {
+    const page_num = req.body.page_num
+    const page_size = req.body.page_size
+    const result = getList(page_num, page_size)
 
     return result.then(listData => {
       return new SuccessModel(listData)

@@ -77,8 +77,14 @@ body {
 }
 
 .blog-item-content {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
   margin: 12px 0;
+  text-overflow: ellipsis;
   font-size: 16px;
+
+  -webkit-line-clamp: 2;
 }
 
 .blog-item-footer {

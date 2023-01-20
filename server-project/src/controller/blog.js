@@ -2,15 +2,21 @@ const {
   exec
 } = require('../db/mysql')
 
-const getList = (author, type) => {
-  let sql = `select * from blogs where 1=1 `
-  if (author) {
-    sql += `and author = '${author}'`
+const getTotal = () => {
+  const sql = `select count(*) from blogs`
+
+  // 返回 promise
+  return exec(sql).then(res => {
+    const result = res[0]
+    return result['count(*)']
+  })
+}
+
+const getList = (page_num, page_size) => {
+  let sql = `select * from blogs order by updatetime desc`
+  if (page_num && page_size) {
+    sql += ` limit ${(parseInt(page_num) - 1) * parseInt(page_size)},${parseInt(page_size)}`
   }
-  if (type) {
-    sql += `and type = '${type}'`
-  }
-  sql += `order by updatetime desc`
 
   // 返回 promise
   return exec(sql)
@@ -108,6 +114,7 @@ const delBlog = (id, sessionAuthor) => {
 }
 
 module.exports = {
+  getTotal,
   getList,
   getDetail,
   newBlog,
