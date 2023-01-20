@@ -7,7 +7,7 @@ import BlogEdit from './BlogEdit'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { LoginReducer } from '../pages'
-import { getBlogDetail, updateBlog } from '../../http/api/blog'
+import { getBlogDetail, updateBlog, deleteBlog } from '../../http/api/blog'
 
 const { Title, Paragraph } = Typography
 const BreadcrumbItem = Breadcrumb.Item
@@ -53,7 +53,7 @@ const BlogDetail = () => {
           setUpdateVal(new Date().getTime())
           setEditShow(false)
         } else {
-          Message.error('更新博客失败')
+          Message.error(res.data.message)
         }
       })
       .catch((err) => {
@@ -91,7 +91,20 @@ const BlogDetail = () => {
           status: 'danger',
         },
         onOk: () => {
-          console.log('del')
+          deleteBlog({
+            id: blogId,
+          })
+            .then((res) => {
+              if (res.data.errno !== -1) {
+                Message.success('删除博客成功')
+                navigate('/')
+              } else {
+                Message.error(res.data.message)
+              }
+            })
+            .catch((err) => {
+              console.error(err)
+            })
         },
       })
     } else {

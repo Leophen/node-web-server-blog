@@ -15,12 +15,16 @@ import { useNavigate } from 'react-router-dom'
 
 export interface LoginReducer {
   status: boolean
+  username: string
 }
 
 const Pages = () => {
   const loginStatus = useSelector<{
     loginReducer: LoginReducer
   }>((state) => state.loginReducer.status)
+  const loginUsername = useSelector<{
+    loginReducer: LoginReducer
+  }>((state) => state.loginReducer.username)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const location = useLocation()
@@ -28,7 +32,7 @@ const Pages = () => {
   useEffect(() => {
     loginTest().then((res) => {
       if (res.data.errno !== -1) {
-        dispatch.loginReducer.login()
+        dispatch.loginReducer.login(res.data.data.username)
       }
     })
   }, [])
@@ -98,19 +102,22 @@ const Pages = () => {
             )}
 
             {loginStatus ? (
-              <Dropdown
-                droplist={
-                  <Menu onClickMenuItem={handleLogout}>
-                    <Menu.Item key="logout">退出登录</Menu.Item>
-                  </Menu>
-                }
-                trigger="click"
-                position="bottom"
-              >
-                <Avatar size={28}>
-                  <IconUser />
-                </Avatar>
-              </Dropdown>
+              <>
+                <Dropdown
+                  droplist={
+                    <Menu onClickMenuItem={handleLogout}>
+                      <Menu.Item key="logout">退出登录</Menu.Item>
+                    </Menu>
+                  }
+                  trigger="click"
+                  position="bottom"
+                >
+                  <Avatar size={28}>
+                    <IconUser />
+                  </Avatar>
+                </Dropdown>
+                <span className="login-username">{loginUsername as string}</span>
+              </>
             ) : (
               <Button shape="round" type="primary" onClick={() => setLoginShow(true)}>
                 登录

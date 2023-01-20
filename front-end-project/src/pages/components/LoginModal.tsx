@@ -47,7 +47,7 @@ const InnerPage = (props: InnerPageType) => {
             const { errno } = res.data
             if (errno !== -1) {
               Message.success('登录成功')
-              dispatch.loginReducer.login()
+              dispatch.loginReducer.login(res.data.data.username)
               onClose?.()
             } else {
               Message.error('账号或密码错误')

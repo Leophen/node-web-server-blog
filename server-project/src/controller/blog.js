@@ -19,7 +19,6 @@ const getList = (author, type) => {
 const getDetail = (id) => {
   const sql = `select * from blogs where id = '${id}'`
   return exec(sql).then(rows => {
-    console.log(id, rows, 'jjj')
     return rows[0]
   })
 }
@@ -47,9 +46,13 @@ const newBlog = (blogData = {}) => {
 /**
  * 更新博客
  * @param {*} blogData 更新的博客数据
- * @returns 是否更新成功
+ * @param {*} sessionAuthor 编辑人
+ * @returns
+ * 0 编辑成功
+ * -1 不能编辑他人的博客
+ * -2 未知错误
  */
-const updateBlog = (blogData = {}) => {
+const updateBlog = (blogData = {}, sessionAuthor) => {
   const {
     id,
     title,
@@ -57,34 +60,48 @@ const updateBlog = (blogData = {}) => {
     author,
     tag
   } = blogData
-  console.log(id, 'idaaa')
   const sql = `
     update blogs set title = '${title}', content = '${content}', author = '${author}', tag = '${tag}'
     where id = ${id}
   `
 
   return exec(sql).then(updateData => {
-    if (updateData.affectedRows > 0) {
-      return true
+    if (author !== sessionAuthor) {
+      return -1
     }
-    return false
+    if (updateData.affectedRows > 0) {
+      return 0
+    }
+    return -2
   })
 }
 
 /**
  * 删除博客
- * @param {*} id 要删除的博客 id
- * @param {*} author 删除人
- * @returns 是否删除成功
+ * @param {*} id 要删除的博客 ID
+ * @param {*} sessionAuthor 删除人
+ * @returns
+ * 0 删除成功
+ * -1 不能删除他人的博客
+ * -2 未知错误
  */
-const delBlog = (id, author) => {
-  const sql = `delete from blogs where id = '${id}' and author='${author}'`
+const delBlog = (id, sessionAuthor) => {
+  const checkSql = `SELECT * FROM blogs WHERE id = '${id}'`;
+  const delSql = `delete from blogs where id = '${id}' and author='${sessionAuthor}'`
 
-  return exec(sql).then(delData => {
-    if (delData.affectedRows > 0) {
-      return true
+  return exec(checkSql).then(rows => {
+    return rows[0].author
+  }).then((author) => {
+    if (author === sessionAuthor) {
+      return exec(delSql).then(delData => {
+        if (delData.affectedRows > 0) {
+          return 0
+        }
+        return -2
+      })
+    } else {
+      return -1
     }
-    return false
   })
 }
 

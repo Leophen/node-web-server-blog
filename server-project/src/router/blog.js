@@ -19,7 +19,6 @@ const loginCheck = (req) => {
 
 const handleBlogRouter = (req, res) => {
   const method = req.method
-  console.log(req.body, 'req')
   const id = req.body.id
 
   // 获取博客列表
@@ -65,12 +64,16 @@ const handleBlogRouter = (req, res) => {
       return loginCheckResult
     }
 
-    const result = updateBlog(req.body)
+    const author = req.session.username
+
+    const result = updateBlog(req.body, author)
     return result.then(val => {
-      if (val) {
-        return new SuccessModel('更新博客成功')
+      if (val === 0) {
+        return new SuccessModel('编辑成功')
+      } else if (val === -1) {
+        return new ErrorModel('不能编辑他人的博客')
       } else {
-        return new ErrorModel('更新博客失败')
+        return new ErrorModel('编辑失败')
       }
     })
   }
@@ -87,10 +90,12 @@ const handleBlogRouter = (req, res) => {
 
     const result = delBlog(id, author)
     return result.then(val => {
-      if (val) {
-        return new SuccessModel()
+      if (val === 0) {
+        return new SuccessModel('删除成功')
+      } else if (val === -1) {
+        return new ErrorModel('不能删除他人的博客')
       } else {
-        return new ErrorModel('删除博客失败')
+        return new ErrorModel('删除失败')
       }
     })
   }
