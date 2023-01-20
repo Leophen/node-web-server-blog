@@ -12,7 +12,7 @@ interface BlogDetailType {
   title?: string
   content?: string
   tag?: string[]
-  onSuccess: () => void
+  onSuccess: (values: { title: string; content: string; tag: string[] }) => void
   onClose: () => void
 }
 
@@ -32,29 +32,7 @@ const BlogEdit = (props: BlogDetailType) => {
       content: Yup.string().max(500, '博客内容不得超过500个字').required('请输入博客内容'),
     }),
     onSubmit: (values) => {
-      const { title, content, tag } = values
-      if (isNewMode) {
-        createBlog({
-          title,
-          content,
-          tag: JSON.stringify(tag),
-        })
-          .then((res) => {
-            const { errno } = res.data
-            if (errno !== -1) {
-              Message.success('创建博客成功')
-              onSuccess?.()
-              onClose?.()
-            } else {
-              Message.error('创建博客失败')
-            }
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-      } else {
-        console.log('submit update', values)
-      }
+      onSuccess?.(values)
     },
   })
 
@@ -64,6 +42,7 @@ const BlogEdit = (props: BlogDetailType) => {
     if (visible) {
       setFieldValue('title', title)
       setFieldValue('content', content)
+      setFieldValue('tag', tag)
     }
   }, [visible])
 

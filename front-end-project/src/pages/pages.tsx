@@ -10,6 +10,8 @@ import { useState, useEffect } from 'react'
 import BlogEdit from './components/BlogEdit'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginTest, logoutBlog } from '../http/api/user'
+import { createBlog } from '../http/api/blog'
+import { useNavigate } from 'react-router-dom'
 
 export interface LoginReducer {
   status: boolean
@@ -19,6 +21,7 @@ const Pages = () => {
   const loginStatus = useSelector<{
     loginReducer: LoginReducer
   }>((state) => state.loginReducer.status)
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const location = useLocation()
 
@@ -54,9 +57,28 @@ const Pages = () => {
   const [editShow, setEditShow] = useState(false)
   const [loginShow, setLoginShow] = useState(false)
 
-  const handleAddSuccess = () => {
-    const addTime = new Date().getTime()
-    setUpdateListVal(addTime)
+  const handleAddSuccess = (values) => {
+    const { title, content, tag } = values
+    createBlog({
+      title,
+      content,
+      tag: JSON.stringify(tag),
+    })
+      .then((res) => {
+        const { errno } = res.data
+        if (errno !== -1) {
+          Message.success('创建博客成功')
+          const createTime = new Date().getTime()
+          setUpdateListVal(createTime)
+          setEditShow(false)
+          navigate(`/`)
+        } else {
+          Message.error('创建博客失败')
+        }
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
   const [updateListVal, setUpdateListVal] = useState(0)
 

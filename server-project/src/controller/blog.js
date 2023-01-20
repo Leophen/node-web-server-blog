@@ -34,8 +34,7 @@ const newBlog = (blogData = {}) => {
   const createTime = Date.now()
 
   const sql = `
-    insert into blogs (title, content, createtime, author, tag)
-    values ('${title}', '${content}', ${createTime}, '${author}', '${tag}')
+    insert into blogs (title, content, createtime, author, tag) values ('${title}', '${content}', ${createTime}, '${author}', '${tag}')
   `
 
   return exec(sql).then(insertData => {
@@ -47,18 +46,20 @@ const newBlog = (blogData = {}) => {
 
 /**
  * 更新博客
- * @param {*} id 要更新的博客 id
- * @param {*} blogData 更新的博客对象，包含 title、content 属性
+ * @param {*} blogData 更新的博客数据
  * @returns 是否更新成功
  */
-const updateBlog = (id, blogData = {}) => {
+const updateBlog = (blogData = {}) => {
   const {
+    id,
     title,
     content,
+    author,
     tag
   } = blogData
+  console.log(id, 'idaaa')
   const sql = `
-    update blogs set title = '${title}', content = '${content}', type = '${tag}'
+    update blogs set title = '${title}', content = '${content}', author = '${author}', tag = '${tag}'
     where id = ${id}
   `
 

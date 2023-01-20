@@ -65,10 +65,10 @@ const handleBlogRouter = (req, res) => {
       return loginCheckResult
     }
 
-    const result = updateBlog(id, req.body)
+    const result = updateBlog(req.body)
     return result.then(val => {
       if (val) {
-        return new SuccessModel()
+        return new SuccessModel('更新博客成功')
       } else {
         return new ErrorModel('更新博客失败')
       }

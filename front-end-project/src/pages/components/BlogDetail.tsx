@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { Breadcrumb, Divider, Typography, Message, Modal } from '@arco-design/web-react'
+import { Breadcrumb, Divider, Typography, Message, Modal, Tag } from '@arco-design/web-react'
 import { IconHome, IconEdit, IconDelete } from '@arco-design/web-react/icon'
 import { getTime } from './BlogList'
 import BlogEdit from './BlogEdit'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { LoginReducer } from '../pages'
-import { getBlogDetail } from '../../http/api/blog'
+import { getBlogDetail, updateBlog } from '../../http/api/blog'
 
 const { Title, Paragraph } = Typography
 const BreadcrumbItem = Breadcrumb.Item
@@ -25,25 +25,8 @@ const BlogDetail = () => {
     content: '内容',
     createtime: 0,
     author: '作者',
-    type: '标签',
+    tag: [],
   })
-
-  useEffect(() => {
-    getBlogDetail({ id: blogId }).then((res) => {
-      if (res.data.data) {
-        const { title, content, createtime, author, type } = res.data.data
-        blogData.title = title
-        blogData.content = content
-        blogData.createtime = createtime
-        blogData.author = author
-        blogData.type = type ? JSON.parse(type) : []
-        setBlogData({ ...blogData })
-      } else {
-        Message.error('博客不存在')
-        navigate('/')
-      }
-    })
-  }, [])
 
   const [editShow, setEditShow] = useState(false)
   const handleEdit = () => {
@@ -54,9 +37,50 @@ const BlogDetail = () => {
     }
   }
 
-  const handleEditSuccess = () => {
-    console.log('edit success')
+  const [updateVal, setUpdateVal] = useState(0)
+  const handleEditSuccess = (values) => {
+    const { title = '', content = '', tag = [] } = values
+    updateBlog({
+      id: blogId,
+      title,
+      content,
+      author: blogData.author,
+      tag: JSON.stringify(tag),
+    })
+      .then((res) => {
+        if (res.data.errno !== -1) {
+          Message.success('更新博客成功')
+          setUpdateVal(new Date().getTime())
+          setEditShow(false)
+        } else {
+          Message.error('更新博客失败')
+        }
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   }
+
+  useEffect(() => {
+    getBlogDetail({ id: blogId })
+      .then((res) => {
+        if (res.data.data) {
+          const { title, content, createtime, author, tag } = res.data.data
+          blogData.title = title
+          blogData.content = content
+          blogData.createtime = createtime
+          blogData.author = author
+          blogData.tag = tag ? JSON.parse(tag) : []
+          setBlogData({ ...blogData })
+        } else {
+          Message.error('博客不存在')
+          navigate('/')
+        }
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  }, [updateVal])
 
   const handleDelete = () => {
     if (loginStatus) {
@@ -86,6 +110,14 @@ const BlogDetail = () => {
 
       <Typography>
         <Title heading={5}>{blogData.title}</Title>
+        <section className="blog-item-type">
+          {blogData.tag &&
+            blogData.tag.map((item, index) => (
+              <Tag key={index} color="arcoblue" bordered>
+                {item}
+              </Tag>
+            ))}
+        </section>
         <Paragraph>{blogData.content}</Paragraph>
       </Typography>
 
@@ -108,7 +140,7 @@ const BlogDetail = () => {
         </section>
       </footer>
 
-      <BlogEdit mode="update" visible={editShow} title={blogData.title} content={blogData.content} onSuccess={handleEditSuccess} onClose={() => setEditShow(false)} />
+      <BlogEdit mode="update" visible={editShow} title={blogData.title} content={blogData.content} tag={blogData.tag} onSuccess={handleEditSuccess} onClose={() => setEditShow(false)} />
     </div>
   )
 }
