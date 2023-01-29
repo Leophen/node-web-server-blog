@@ -5,7 +5,7 @@ import serverConfig from "./config";
 const serviceAxios = axios.create({
   baseURL: serverConfig.baseURL, // 基础请求地址
   timeout: 10000, // 请求超时设置
-  withCredentials: false, // 跨域请求是否需要携带 cookie
+  withCredentials: true, // 跨域请求是否需要携带 cookie
 });
 
 // 创建请求拦截

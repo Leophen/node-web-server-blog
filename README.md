@@ -43,5 +43,3 @@ npm i
 
 npm run dev
 ```
-
-通过 Nginx 反向代理进行联调
