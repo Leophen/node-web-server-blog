@@ -16,6 +16,12 @@ npm run start
 
 - 2、连接 MySQL
 
+表结构如下：
+
+<img src="https://cdn.staticaly.com/gh/Leophen/all_assets@main/assets/image.7d1rozoo0zk0.png" width="1000" referrerPolicy="no-referrer" />
+
+<img src="https://cdn.staticaly.com/gh/Leophen/all_assets@main/assets/image.5mozj1j97po0.png" width="1000" referrerPolicy="no-referrer" />
+
 - 3、安装 Redis
 
 ```bash
@@ -38,4 +44,4 @@ npm i
 npm run dev
 ```
 
-通过 Nginx 反向代理联调
+通过 Nginx 反向代理进行联调
