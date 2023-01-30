@@ -1,5 +1,6 @@
 const {
-  exec
+  exec,
+  escape
 } = require('../db/mysql')
 
 const getTotal = () => {
@@ -30,16 +31,19 @@ const getDetail = (id) => {
 }
 
 const newBlog = (blogData = {}) => {
-  const {
+  let {
     title,
     content,
     author,
     tag
   } = blogData
+  title = escape(title)
+  content = escape(content)
+  tag = escape(tag)
   const createTime = Date.now()
 
   const sql = `
-    insert into blogs (title, content, updatetime, author, tag) values ('${title}', '${content}', ${createTime}, '${author}', '${tag}')
+    insert into blogs (title, content, updatetime, author, tag) values (${title}, ${content}, ${createTime}, '${author}', ${tag})
   `
 
   return exec(sql).then(insertData => {
@@ -59,17 +63,20 @@ const newBlog = (blogData = {}) => {
  * -2 未知错误
  */
 const updateBlog = (blogData = {}, sessionAuthor) => {
-  const {
+  let {
     id,
     title,
     content,
     author,
     tag
   } = blogData
+  title = escape(title)
+  content = escape(content)
+  tag = escape(tag)
   const updateTime = Date.now()
 
   const sql = `
-    update blogs set title = '${title}', content = '${content}', updatetime = '${updateTime}', author = '${author}', tag = '${tag}'
+    update blogs set title = ${title}, content = ${content}, updatetime = ${updateTime}, author = '${author}', tag = ${tag}
     where id = ${id}
   `
 

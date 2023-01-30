@@ -1,5 +1,6 @@
 const {
-  exec
+  exec,
+  escape
 } = require('../db/mysql')
 
 /**
@@ -9,8 +10,11 @@ const {
  * @returns 登录是否成功
  */
 const login = (username, password) => {
+  username = escape(username)
+  password = escape(password)
+
   const sql = `
-    select username from users where username = '${username}' and password = '${password}'
+    select username from users where username = ${username} and password = ${password}
   `
 
   return exec(sql).then(rows => {
@@ -25,10 +29,13 @@ const login = (username, password) => {
  * @returns 注册是否成功
  */
 const register = (username, password) => {
+  username = escape(username)
+  password = escape(password)
+
   const querySql = `SELECT * FROM users
-  WHERE username = '${username}'`;
+  WHERE username = ${username}`;
   const insertSql = `INSERT INTO users (username, password)
-  VALUES ('${username}', '${password}')`;
+  VALUES (${username}, ${password})`;
 
   return exec(querySql).then(res => {
     if (res.length > 0) {
