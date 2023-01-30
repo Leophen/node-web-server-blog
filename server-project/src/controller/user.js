@@ -2,6 +2,9 @@ const {
   exec,
   escape
 } = require('../db/mysql')
+const {
+  encrypt
+} = require('../utils/cryp')
 
 /**
  * 登录接口
@@ -11,7 +14,7 @@ const {
  */
 const login = (username, password) => {
   username = escape(username)
-  password = escape(password)
+  password = escape(encrypt(password))
 
   const sql = `
     select username from users where username = ${username} and password = ${password}
@@ -30,7 +33,7 @@ const login = (username, password) => {
  */
 const register = (username, password) => {
   username = escape(username)
-  password = escape(password)
+  password = escape(encrypt(password))
 
   const querySql = `SELECT * FROM users
   WHERE username = ${username}`;
