@@ -5,6 +5,7 @@ const {
   get,
   set
 } = require('./src/db/redis')
+const { access } = require('./src/utils/log')
 
 // 用于处理 post data
 const getPostData = (req) => {
@@ -35,6 +36,9 @@ const getPostData = (req) => {
 }
 
 const serverHandle = (req, res) => {
+  // 记录 access log
+  access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
+
   // 设置返回格式 JSON
   res.setHeader('Content-type', 'application/json')
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8001');
