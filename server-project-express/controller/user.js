@@ -14,7 +14,8 @@ const {
  */
 const login = (username, password) => {
   username = escape(username)
-  password = escape(encrypt(password))
+  password = escape(password)
+  // password = escape(encrypt(password))
 
   const sql = `
     select username from users where username = ${username} and password = ${password}
@@ -33,7 +34,8 @@ const login = (username, password) => {
  */
 const register = (username, password) => {
   username = escape(username)
-  password = escape(encrypt(password))
+  password = escape(password)
+  // password = escape(encrypt(password))
 
   const querySql = `SELECT * FROM users
   WHERE username = ${username}`;

@@ -8,6 +8,7 @@ const userRouter = require('./routes/user');
 
 const app = express();
 const cors = require('cors');
+const session = require('express-session');
 
 // CORS 跨域
 app.use(cors({
@@ -20,6 +21,17 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+// 操作 Session，每次请求时生成随机 session
+app.use(session({
+  secret: 'leophen_0810#',  // 密匙
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    path: '/',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24小时后失效
+  }
+}))
 
 app.use('/api/blog', blogRouter);
 app.use('/api/user', userRouter);

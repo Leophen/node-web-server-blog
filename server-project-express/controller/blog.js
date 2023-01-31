@@ -30,11 +30,10 @@ const getDetail = (id) => {
   })
 }
 
-const newBlog = (blogData = {}) => {
+const newBlog = (blogData = {}, author) => {
   let {
     title,
     content,
-    author,
     tag
   } = blogData
   title = escape(title)
