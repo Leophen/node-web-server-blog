@@ -7,6 +7,14 @@ const blogRouter = require('./routes/blog');
 const userRouter = require('./routes/user');
 
 const app = express();
+const cors = require('cors');
+
+// CORS 跨域
+app.use(cors({
+  origin: 'http://localhost:8001',
+  allowedHeaders: 'Content-Type',
+  credentials: true
+}))
 
 app.use(logger('dev'));
 app.use(express.json());
