@@ -9,6 +9,8 @@ const userRouter = require('./routes/user');
 const app = express();
 const cors = require('cors');
 const session = require('express-session');
+const RedisStore = require("connect-redis")(session);
+const redisClient = require('./db/redis');
 
 // CORS 跨域
 app.use(cors({
@@ -25,12 +27,14 @@ app.use(cookieParser());
 app.use(session({
   secret: 'leophen_0810#',  // 密匙
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: {
     path: '/',
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24小时后失效
-  }
+  },
+  // Redis 存储 Session
+  store: new RedisStore({ client: redisClient }),
 }))
 
 app.use('/api/blog', blogRouter);
