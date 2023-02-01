@@ -2,6 +2,8 @@ const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const path = require('path');
+const fs = require('fs');
 
 const blogRouter = require('./routes/blog');
 const userRouter = require('./routes/user');
@@ -19,7 +21,22 @@ app.use(cors({
   credentials: true
 }))
 
-app.use(logger('dev'));
+// 日志操作
+const ENV = process.env.NODE_ENV
+if (ENV !== 'production') {
+  // 开发〡测试环境
+  app.use(logger('dev'));
+} else {
+  // 线上环境
+  const logFileName = path.join(__dirname, 'logs', 'access.log')
+  const writeStream = fs.createWriteStream(logFileName, {
+    flags: 'a'
+  })
+  app.use(logger('combined', {
+    stream: writeStream
+  }));
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
