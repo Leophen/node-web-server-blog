@@ -7,6 +7,8 @@ const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const cors = require('@koa/cors')
 const session = require('koa-generic-session')
+const redisStore = require('koa-redis')
+const { REDIS_CONFIG } = require('./config/db')
 
 const blog = require('./routes/blog')
 const user = require('./routes/user')
@@ -50,6 +52,10 @@ app.use(session({
     httpOnly: true,
     maxAge: 24 * 60 * 60 * 1000 // 24小时后失效
   },
+  // 配置 Redis
+  store: redisStore({
+    all: `${REDIS_CONFIG.host}:${REDIS_CONFIG.port}`
+  })
 }))
 
 // routes
