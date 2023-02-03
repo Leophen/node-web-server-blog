@@ -5,11 +5,11 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
-const cors = require('@koa/cors');
+const cors = require('@koa/cors')
+const session = require('koa-generic-session')
 
-const index = require('./routes/index')
-const users = require('./routes/users')
 const blog = require('./routes/blog')
+const user = require('./routes/user')
 
 // CORS 跨域
 app.use(cors({
@@ -41,14 +41,24 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
+// 操作 Session
+app.keys = ['leophen_0810#']
+app.use(session({
+  // 配置 Cookie
+  cookie: {
+    path: '/',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 24小时后失效
+  },
+}))
+
 // routes
-app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
 app.use(blog.routes(), blog.allowedMethods())
+app.use(user.routes(), user.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
-});
+})
 
 module.exports = app

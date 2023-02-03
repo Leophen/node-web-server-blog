@@ -16,7 +16,7 @@ router.post('/register', (req, res, next) => {
 
   return result.then(data => {
     if (data === -2) {
-      res.json(new SuccessModel('账号已存在'))
+      res.json(new ErrorModel('账号已存在'))
     }
     if (data === -1) {
       res.json(new ErrorModel('注册失败'))
@@ -47,7 +47,7 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res, next) => {
   if (req.session.username) {
     req.session.username = null
-    res.json(new ErrorModel('退出登录成功'))
+    res.json(new SuccessModel('退出登录成功'))
   } else {
     res.json(new ErrorModel('退出登录失败'))
   }
