@@ -3,15 +3,24 @@ const {
   escape
 } = require('../db/mysql')
 
+/**
+ * 获取博客总数
+ * @returns 博客总数
+ */
 const getTotal = async () => {
   const sql = `select count(*) from blogs`
 
-  return await exec(sql).then(res => {
-    const result = res[0]
-    return result['count(*)']
-  })
+  const rows = await exec(sql)
+  const result = rows[0]
+  return result['count(*)']
 }
 
+/**
+ * 获取博客列表
+ * @param {*} page_num 页码
+ * @param {*} page_size 每页展示条目
+ * @returns 博客列表数据
+ */
 const getList = async (page_num, page_size) => {
   let sql = `select * from blogs order by updatetime desc`
   if (page_num && page_size) {
@@ -22,14 +31,25 @@ const getList = async (page_num, page_size) => {
   return await exec(sql)
 }
 
+/**
+ * 获取博客详情
+ * @param {*} id 博客ID
+ * @returns 博客详情数据
+ */
 const getDetail = async (id) => {
   const sql = `select * from blogs where id = '${id}'`
-  return await exec(sql).then(rows => {
-    return rows[0]
-  })
+
+  const rows = await exec(sql)
+  return rows[0]
 }
 
-const newBlog = async (blogData = {}, author) => {
+/**
+ * 新建博客
+ * @param {*} blogData 新建的博客数据
+ * @param {*} sessionAuthor 编辑人
+ * @returns 新建的博客ID
+ */
+const newBlog = async (blogData = {}, sessionAuthor) => {
   let {
     title,
     content,
@@ -41,14 +61,13 @@ const newBlog = async (blogData = {}, author) => {
   const createTime = Date.now()
 
   const sql = `
-    insert into blogs (title, content, updatetime, author, tag) values (${title}, ${content}, ${createTime}, '${author}', ${tag})
+    insert into blogs (title, content, updatetime, author, tag) values (${title}, ${content}, ${createTime}, '${sessionAuthor}', ${tag})
   `
 
-  return await exec(sql).then(insertData => {
-    return {
-      id: insertData.insertId
-    }
-  })
+  const insertData = await exec(sql)
+  return {
+    id: insertData.insertId
+  }
 }
 
 /**
@@ -78,15 +97,14 @@ const updateBlog = async (blogData = {}, sessionAuthor) => {
     where id = ${id}
   `
 
-  return await exec(sql).then(updateData => {
-    if (author !== sessionAuthor) {
-      return -1
-    }
-    if (updateData.affectedRows > 0) {
-      return 0
-    }
-    return -2
-  })
+  const updateData = await exec(sql)
+  if (author !== sessionAuthor) {
+    return -1
+  }
+  if (updateData.affectedRows > 0) {
+    return 0
+  }
+  return -2
 }
 
 /**
@@ -102,20 +120,17 @@ const delBlog = async (id, sessionAuthor) => {
   const checkSql = `SELECT * FROM blogs WHERE id = '${id}'`;
   const delSql = `delete from blogs where id = '${id}' and author='${sessionAuthor}'`
 
-  return await exec(checkSql).then(rows => {
-    return rows[0].author
-  }).then((author) => {
-    if (author === sessionAuthor) {
-      return exec(delSql).then(delData => {
-        if (delData.affectedRows > 0) {
-          return 0
-        }
-        return -2
-      })
-    } else {
-      return -1
+  const rows = await exec(checkSql)
+  const author = rows[0].author
+  if (author === sessionAuthor) {
+    const delData = await exec(delSql)
+    if (delData.affectedRows > 0) {
+      return 0
     }
-  })
+    return -2
+  } else {
+    return -1
+  }
 }
 
 module.exports = {
